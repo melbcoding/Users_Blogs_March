@@ -1,5 +1,9 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app.models import post_model
+from flask import flash
+import re
+EMAIL_REGEX= re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+
 
 
 class User:
@@ -49,14 +53,14 @@ class User:
 
     # query for a user with all of their posts, return one User instance with a list of Post instances 
     @classmethod
-    def get_user_with_posts(cls):
+    def get_user_with_posts(cls, data):
         query= '''
             SELECT * FROM users
             LEFT JOIN posts
             ON users.id = posts.user_id
-            WHERE users.id = 1
+            WHERE users.id = %(user_id)s;
         '''
-        results= connectToMySQL(cls.my_db).query_db(query)
+        results= connectToMySQL(cls.my_db).query_db(query, data)
 
         print(results)
         # read your terminal, see if this query worked by adding a print statement. If it doesn't, it will say "something went wrong..." followed by the error 
@@ -80,7 +84,27 @@ class User:
 
             # return this user to the route in the controller, to be used in the template
         return one_user
+    
 
+    @staticmethod
+    def validate_user(form_data):
+        is_valid= True
+        if len(form_data['f_name']) < 2:
+            flash("First Name must be atleast 2 characters", "register")
+            is_valid= False
+        if len(form_data['l_name']) < 2:
+            flash("Last Name must be atleast 2 characters")
+            is_valid= False
+        if not EMAIL_REGEX.match(form_data['email']):
+            flash("Invalid email address!")
+            is_valid=False
+        if len(form_data['password']) < 8:
+            flash("Password needs to be atleast 8 characters")
+            is_valid=False
+        if form_data['conf_password'] != form_data['password']:
+            flash("password and confirm password must match!")
+            is_valid=False
+        return is_valid
 
 
             
