@@ -1,55 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% with messages = get_flashed_messages(category_filter=['register'])%} 
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="d-flex flex-column mt-5">
+        <form  class=" shadow p-3 mb-5 bg-body rounded" action="/user/register" method="POST">
+            <h1>Register</h1>
+            <div class="mb-3">
+                <label for="" class="form-label">First Name:</label>
+                <input type="text" class="form-control" name="f_name">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Last Name:</label>
+                <input type="text" class="form-control" name="l_name">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Email:</label>
+                <input type="email" class="form-control" name="email">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Password:</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Confirm Password:</label>
+                <input type="password" class="form-control" name="conf_password">
+            </div>
+            <button type="submit"  class="btn btn-outline-info">Register</button>
+        </form>
+        <div>
+            {% with messages = get_flashed_messages(category_filter=['register'])%}
         {%if messages%}
-            {% for message in messages %}            
-                <p>{{message}}</p>                  
-            {% endfor %}
+        {% for message in messages %}
+        <p class='form-control is-invalid'>{{message}}</p>
+        {% endfor %}
         {%endif%}
-    {%endwith%}
-    <div>
-        <h1>Register</h1>
-        <form action="/user/register" method="POST">
-            <div>
-                <label for="">First Name:</label>
-                <input type="text" name="f_name">
-            </div>
-            <div>
-                <label for="">Last Name:</label>
-                <input type="text" name="l_name">
-            </div>
-            <div>
-                <label for="">Email:</label>
-                <input type="email" name="email">
-            </div>
-            <div>
-                <label for="">Password:</label>
-                <input type="password" name="password">
-            </div>
-            <div>
-                <label for="">Confirm Password:</label>
-                <input type="password" name="conf_password">
-            </div>
-            <button type="submit">Register</button>
-        </form>
-        <h2>Login</h2>
-        <form action="/user/login" method="POST">
-                <label for="">Email:</label>
-                <input type="email" name="email">
-            </div>
-            <div>
-                <label for="">Password:</label>
-                <input type="password" name="password">
-            </div>
-            <button type="submit">Login</button>
-        </form>
+        {%endwith%}
+        </div>
     </div>
-</body>
-</html>
+
+    <div class="d-flex flex-column">
+        <form  class="shadow p-3 mb-5 bg-body rounded" action="/user/login" method="POST">
+            <h2>Login</h2>
+            <div class="mb-3">
+                <label for="" class="form-label">Email:</label>
+                <input type="email" class="form-control" name="login_email">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Password:</label>
+                <input type="password" class="form-control" name="login_password">
+            </div>
+            <button type="submit" class="btn btn-outline-info">Login</button>
+        </form>
+        <div>
+            
+        {% with messages = get_flashed_messages(category_filter=['login'])%}
+            {%if messages%}
+                {% for message in messages %}
+                <p class='form-control is-invalid'>{{message}}</p>
+                {% endfor %}
+            {%endif%}
+        {%endwith%}
+        </div>
+    </div>
+{% endblock %}
